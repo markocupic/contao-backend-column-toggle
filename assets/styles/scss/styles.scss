@@ -1,0 +1,152 @@
+/*
+ * This file is part of Contao Backend Column Toggle.
+ *
+ * (c) Marko Cupic <m.cupic@gmx.ch>
+ * @license GPL-3.0-or-later
+ */
+
+.cbct-column-toggle-data {
+    display: none !important;
+}
+
+/* Clickable header cells */
+table.tl_listing thead th.cbct-column-toggle__header {
+    cursor: pointer;
+    user-select: none;
+}
+
+/* The "x" is anchored to the label, not to the cell, so it stays next to the
+   word in wide columns. The space is reserved permanently, so hovering never
+   reflows the table. */
+table.tl_listing thead th.cbct-column-toggle__header .cbct-column-toggle__label {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    padding-right: 1.3em;
+}
+
+table.tl_listing thead th.cbct-column-toggle__header:hover,
+table.tl_listing thead th.cbct-column-toggle__header:focus-visible {
+    color: var(--contao, #f47c00);
+}
+
+table.tl_listing thead th.cbct-column-toggle__header .cbct-column-toggle__label::after {
+    content: "\00d7";
+    position: absolute;
+    top: 50%;
+    right: .25em;
+    font-weight: 700;
+    line-height: 1;
+    opacity: 0;
+    transform: translateY(-50%);
+    transition: opacity .12s ease-in-out;
+    pointer-events: none;
+}
+
+table.tl_listing thead th.cbct-column-toggle__header:hover .cbct-column-toggle__label::after,
+table.tl_listing thead th.cbct-column-toggle__header:focus-visible .cbct-column-toggle__label::after {
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    table.tl_listing thead th.cbct-column-toggle__header .cbct-column-toggle__label::after {
+        transition: none;
+    }
+}
+
+/* Cells of a column that has been hidden client side */
+.cbct-column-toggle--hidden {
+    display: none !important;
+}
+
+/* Dropdown, rendered as a global operation in #tl_buttons */
+li.cbct-column-toggle {
+    position: relative;
+    font-weight: 400;
+    text-align: left;
+}
+
+.cbct-column-toggle__trigger {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    padding: 3px 0;
+    color: inherit;
+    white-space: nowrap;
+    cursor: pointer;
+    background: none;
+    border: 0;
+}
+
+.cbct-column-toggle__trigger svg {
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+}
+
+.cbct-column-toggle__trigger:hover,
+.cbct-column-toggle__trigger[aria-expanded="true"] {
+    color: var(--contao, #f47c00);
+}
+
+.cbct-column-toggle__panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 100;
+    min-width: 240px;
+    max-height: 60vh;
+    padding: 9px 12px 12px;
+    overflow-y: auto;
+    font-weight: 400;
+    white-space: normal;
+    background: var(--content-bg, #fff);
+    border: 1px solid var(--border, #ddd);
+    border-radius: var(--border-radius, 2px);
+    box-shadow: 0 3px 12px rgb(0 0 0 / 25%);
+}
+
+.cbct-column-toggle__panel[hidden] {
+    display: none;
+}
+
+.cbct-column-toggle__item {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    padding: 3px 0;
+    cursor: pointer;
+}
+
+.cbct-column-toggle__item:hover {
+    color: var(--contao, #f47c00);
+}
+
+.cbct-column-toggle__reset {
+    display: block;
+    width: 100%;
+    margin-top: 9px;
+    padding: 3px 6px;
+    cursor: pointer;
+    background: var(--form-button, #eee);
+    border: 1px solid var(--form-border, #ccc);
+    border-radius: var(--border-radius, 2px);
+}
+
+.cbct-column-toggle__reset:hover {
+    background: var(--form-button-hover, #e0e0e0);
+}
+
+.cbct-column-toggle__message {
+    margin: 9px 0 0;
+    color: var(--contao, #f47c00);
+    font-size: .75rem;
+}
+
+.cbct-column-toggle__message--error {
+    color: var(--error, #c33);
+}
+
+.cbct-column-toggle__message[hidden] {
+    display: none;
+}

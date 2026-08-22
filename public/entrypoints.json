@@ -1,0 +1,12 @@
+{
+  "entrypoints": {
+    "backend": {
+      "css": [
+        "/bundles/markocupiccontaobackendcolumntoggle/backend.css"
+      ],
+      "js": [
+        "/bundles/markocupiccontaobackendcolumntoggle/backend.js"
+      ]
+    }
+  }
+}

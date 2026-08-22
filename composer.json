@@ -1,0 +1,57 @@
+{
+    "name": "markocupic/contao-backend-column-toggle",
+    "description": "Contao backend column toggle: hide and show table columns dynamically with Stimulus, stored per user.",
+    "keywords": [
+        "contao",
+        "backend",
+        "list view",
+        "column toggle"
+    ],
+    "type": "contao-bundle",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Marko Cupic",
+            "email": "m.cupic@gmx.ch",
+            "homepage": "https://github.com/markocupic",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/markocupic/contao-backend-column-toggle/issues",
+        "source": "https://github.com/markocupic/contao-backend-column-toggle"
+    },
+    "require": {
+        "php": "^8.1",
+        "contao/core-bundle": "^5.3"
+    },
+    "require-dev": {
+        "markocupic/easy-coding-standard": "^13.0",
+        "contao/manager-plugin": "^2.12",
+        "contao/test-case": "^5.3",
+        "phpunit/phpunit": "^13.3",
+        "phpstan/phpstan": "^2.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Markocupic\\ContaoBackendColumnToggle\\": "src/"
+        }
+    },
+    "config": {
+        "config": {
+            "allow-plugins": {
+                "contao-components/installer": true,
+                "contao/manager-plugin": true,
+                "php-http/discovery": false,
+                "dealerdirect/phpcodesniffer-composer-installer": true
+            }
+        }
+    },
+    "extra": {
+        "contao-manager-plugin": "Markocupic\\ContaoBackendColumnToggle\\ContaoManager\\Plugin"
+    },
+    "scripts": {
+        "unit-tests": "@php vendor/bin/phpunit -c phpunit.xml.dist",
+        "cs-fixer": "@php tools/ecs/vendor/bin/ecs check config/ contao/ src/ templates/ tests/ --config tools/ecs/config/default.php --fix --ansi"
+    }
+}
