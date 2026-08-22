@@ -213,14 +213,16 @@ export default class extends Controller {
     renderTrigger() {
         const signal = this.abortController.signal;
 
-        // Place the button among the global operations
+        // Place the button among the global operations. Contao 5.6+ renders them
+        // as a list, up to Contao 5.5 #tl_buttons is a plain div of links.
         const menu = document.querySelector('#tl_buttons > ul');
+        const host = menu || document.querySelector('#tl_buttons');
 
-        if (!menu) {
+        if (!host) {
             return;
         }
 
-        this.wrapper = document.createElement('li');
+        this.wrapper = document.createElement(menu ? 'li' : 'span');
         this.wrapper.className = NS;
 
         this.trigger = document.createElement('button');
@@ -238,12 +240,12 @@ export default class extends Controller {
         this.wrapper.append(this.trigger, this.panel);
 
         // Keep our button in front of the "more operations" toggle
-        const more = menu.querySelector('.operations-menu-container');
+        const more = menu ? menu.querySelector('.operations-menu-container') : null;
 
         if (more) {
-            menu.insertBefore(this.wrapper, more);
+            host.insertBefore(this.wrapper, more);
         } else {
-            menu.appendChild(this.wrapper);
+            host.appendChild(this.wrapper);
         }
 
         this.renderPanel();
@@ -327,6 +329,14 @@ export default class extends Controller {
     openPanel() {
         this.panel.hidden = false;
         this.trigger.setAttribute('aria-expanded', 'true');
+
+        // The panel hangs off the right edge of the button. If the button sits
+        // near the left edge of the window, flip it around.
+        this.panel.classList.remove(`${NS}__panel--flipped`);
+
+        if (this.panel.getBoundingClientRect().left < 8) {
+            this.panel.classList.add(`${NS}__panel--flipped`);
+        }
     }
 
     closePanel() {

@@ -60,10 +60,19 @@ table.tl_listing thead th.cbct-column-toggle__header:focus-visible .cbct-column-
 }
 
 /* Dropdown, rendered as a global operation in #tl_buttons */
-li.cbct-column-toggle {
+.cbct-column-toggle {
     position: relative;
+    display: inline-block;
     font-weight: 400;
     text-align: left;
+}
+
+/* Up to Contao 5.5, #tl_buttons is a plain div whose .header_* links carry
+   margin-left: 15px. From Contao 5.6 on, the wrapper is a list item and the
+   spacing comes from the flex gap of the surrounding <ul>, so this rule only
+   matches the legacy markup. */
+#tl_buttons > .cbct-column-toggle {
+    margin-left: 15px;
 }
 
 .cbct-column-toggle__trigger {
@@ -104,6 +113,11 @@ li.cbct-column-toggle {
     border: 1px solid var(--border, #ddd);
     border-radius: var(--border-radius, 2px);
     box-shadow: 0 3px 12px rgb(0 0 0 / 25%);
+}
+
+.cbct-column-toggle__panel--flipped {
+    right: auto;
+    left: 0;
 }
 
 .cbct-column-toggle__panel[hidden] {

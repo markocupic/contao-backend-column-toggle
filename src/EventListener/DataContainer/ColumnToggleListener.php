@@ -16,6 +16,7 @@ namespace Markocupic\ContaoBackendColumnToggle\EventListener\DataContainer;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
+use Contao\CoreBundle\DataContainer\DataContainerGlobalOperationsBuilder;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -148,12 +149,28 @@ class ColumnToggleListener
 
         $GLOBALS['TL_DCA'][$table]['list']['global_operations'][self::OPERATION_NAME] = [
             'showOnSelect' => false,
-            'button_callback' => static function (DataContainerOperation $operation) use ($html): void {
+            'button_callback' => $this->getButtonCallback($html),
+        ];
+    }
+
+    /**
+     * Contao 5.6 introduced the global operations builder and passes a
+     * DataContainerOperation object to the callback. Up to Contao 5.5,
+     * DataContainer::generateGlobalButtons() calls the callback with the legacy
+     * signature ($href, $label, $title, $class, $attributes, $table, $rootIds)
+     * and appends whatever the callback returns.
+     */
+    private function getButtonCallback(string $html): \Closure
+    {
+        if (class_exists(DataContainerGlobalOperationsBuilder::class)) {
+            return static function (DataContainerOperation $operation) use ($html): void {
                 $operation->setHtml($html);
                 $operation['primary'] = true;
                 $operation['listAttributes'] = (new HtmlAttributes())->set('style', 'display:none');
-            },
-        ];
+            };
+        }
+
+        return static fn (): string => $html;
     }
 
     /**
