@@ -38,13 +38,11 @@
         }
     },
     "config": {
-        "config": {
-            "allow-plugins": {
-                "contao-components/installer": true,
-                "contao/manager-plugin": true,
-                "php-http/discovery": false,
-                "dealerdirect/phpcodesniffer-composer-installer": true
-            }
+        "allow-plugins": {
+            "contao-components/installer": false,
+            "contao/manager-plugin": true,
+            "php-http/discovery": false,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "extra": {
