@@ -21,7 +21,7 @@ use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\String\HtmlAttributes;
-use Markocupic\ContaoBackendColumnToggle\Controller\BackendController\ColumnToggleController;
+use Markocupic\ContaoBackendColumnToggle\Controller\ColumnToggleController;
 use Markocupic\ContaoBackendColumnToggle\Session\ColumnVisibilityStorage;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;

@@ -12,11 +12,12 @@ declare(strict_types=1);
  * @link https://github.com/markocupic/contao-backend-column-toggle
  */
 
-namespace Markocupic\ContaoBackendColumnToggle\Controller\BackendController;
+namespace Markocupic\ContaoBackendColumnToggle\Controller;
 
 use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Markocupic\ContaoBackendColumnToggle\EventListener\DataContainer\ColumnToggleListener;
 use Markocupic\ContaoBackendColumnToggle\Session\ColumnVisibilityStorage;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -42,16 +43,21 @@ use Symfony\Component\Routing\Attribute\Route;
 class ColumnToggleController
 {
     public function __construct(
-        private readonly ContaoFramework $framework,
-        private readonly Security $security,
         private readonly ColumnVisibilityStorage $storage,
+        private readonly ContaoFramework $framework,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly Security $security,
     ) {
     }
 
     public function __invoke(Request $request): JsonResponse
     {
+        if (!$this->scopeMatcher->isBackendRequest($request)) {
+            throw new \RuntimeException('This controller can only be called from the backend.');
+        }
+
         if (!$this->security->getUser() instanceof BackendUser) {
-            return new JsonResponse(['error' => 'Not authenticated.'], Response::HTTP_UNAUTHORIZED);
+            throw new \RuntimeException('This controller can only be called by logged in backend users.');
         }
 
         $table = (string) $request->request->get('table', '');
@@ -93,11 +99,18 @@ class ColumnToggleController
      */
     private function getToggleableFields(string $table): array
     {
+        $dca = $this->getDca($table);
+
+        $fields = $dca['list']['label'][ColumnToggleListener::DCA_KEY_ALL_FIELDS] ?? null;
+
+        return \is_array($fields) ? array_keys($fields) : [];
+    }
+
+    private function getDca(string $table): array
+    {
         $controller = $this->framework->getAdapter(Controller::class);
         $controller->loadDataContainer($table);
 
-        $fields = $GLOBALS['TL_DCA'][$table]['list']['label'][ColumnToggleListener::DCA_KEY_ALL_FIELDS] ?? null;
-
-        return \is_array($fields) ? array_keys($fields) : [];
+        return $GLOBALS['TL_DCA'][$table];
     }
 }

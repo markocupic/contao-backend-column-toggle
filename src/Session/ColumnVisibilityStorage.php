@@ -18,11 +18,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
- * Reads and writes the per user column visibility settings.
+ * Reads and writes the per-user column visibility settings.
  *
  * The data is stored in Contao's "contao_backend" session bag. Contao's
  * UserSessionListener loads that bag from the serialized "tl_user.session"
- * blob on kernel.request and writes the complete bag back to that column on
+ * blob on 'kernel.request' and writes the complete bag back to that column on
  * kernel.response. So writing to the bag is what persists the setting in
  * tl_user.session — writing to the column directly would be overwritten by
  * that very listener at the end of the same request.
