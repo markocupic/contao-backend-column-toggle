@@ -21,7 +21,7 @@ use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\String\HtmlAttributes;
-use Markocupic\ContaoBackendColumnToggle\Controller\ColumnToggleController;
+use Markocupic\ContaoBackendColumnToggle\Controller\BackendController\ColumnToggleController;
 use Markocupic\ContaoBackendColumnToggle\Session\ColumnVisibilityStorage;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -29,8 +29,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Removes the columns the user has hidden from the list view and injects the
- * data element the Stimulus controller (cbct--column-toggle) is bound to.
+ * Hides the columns the user has hidden in the list view with CSS and injects
+ * the data element the Stimulus controller (cbct--column-toggle) is bound to.
+ *
+ * The DCA (list.label.fields) is not changed: label callbacks of other bundles
+ * may rely on the position of the columns.
  *
  * The element is added as a global operation, because this is the only
  * extension point that allows adding markup to a list view without overriding
@@ -104,19 +107,6 @@ class ColumnToggleListener
             array_shift($hidden);
         }
 
-        if ([] !== $hidden) {
-            $GLOBALS['TL_DCA'][$table]['list']['label']['fields'] = array_values(
-                array_filter(
-                    $fields,
-                    static fn ($field) => !\in_array(explode(':', (string) $field, 2)[0], $hidden, true),
-                ),
-            );
-
-            // Otherwise Contao would silently re-add the current sorting field
-            // as the last column (see DC_Table::listView())
-            $GLOBALS['TL_DCA'][$table]['list']['label']['showFirstOrderBy'] = false;
-        }
-
         $this->addGlobalOperation($table, $allFields, $hidden);
         $this->addAssets();
     }
@@ -145,12 +135,39 @@ class ColumnToggleListener
             ->set('data-cbct--column-toggle-i18n-value', json_encode($this->getTranslations(), JSON_THROW_ON_ERROR))
         ;
 
-        $html = \sprintf('<div%s></div>', $attributes);
+        $html = \sprintf('<div%s></div>', $attributes).$this->getInitialStyle($hidden);
 
         $GLOBALS['TL_DCA'][$table]['list']['global_operations'][self::OPERATION_NAME] = [
             'showOnSelect' => false,
             'button_callback' => $this->getButtonCallback($html),
         ];
+    }
+
+    /**
+     * Hides the columns before the Stimulus controller has been connected, so
+     * they do not flash on page load. The controller removes this element and
+     * takes over (class "cbct-column-toggle--hidden" on the cells).
+     *
+     * Contao renders every header and body cell with the class "col_<field>".
+     *
+     * @param array<int, string> $hidden
+     */
+    private function getInitialStyle(array $hidden): string
+    {
+        if ([] === $hidden) {
+            return '';
+        }
+
+        $selectors = [];
+
+        foreach ($hidden as $field) {
+            // Field names come from the DCA, but must not break out of the CSS string or the style element
+            $name = addcslashes(str_replace('<', '', 'col_'.$field), '"\\');
+
+            $selectors[] = \sprintf('table.tl_listing.showColumns th[class~="%1$s"], table.tl_listing.showColumns td[class~="%1$s"]', $name);
+        }
+
+        return \sprintf('<style data-cbct-initial-state>%s{display:none}</style>', implode(', ', $selectors));
     }
 
     /**
@@ -178,7 +195,7 @@ class ColumnToggleListener
      */
     private function getTranslations(): array
     {
-        $keys = ['columns', 'columnsTitle', 'hideColumn', 'showAll', 'lastColumn', 'pendingReload', 'error'];
+        $keys = ['columns', 'columnsTitle', 'hideColumn', 'showAll', 'lastColumn', 'error'];
         $translations = [];
 
         foreach ($keys as $key) {

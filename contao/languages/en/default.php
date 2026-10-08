@@ -16,4 +16,3 @@ $GLOBALS['TL_LANG']['MSC']['columnToggle']['hideColumn'] = 'Click to hide this c
 $GLOBALS['TL_LANG']['MSC']['columnToggle']['showAll'] = 'Show all columns';
 $GLOBALS['TL_LANG']['MSC']['columnToggle']['lastColumn'] = 'At least one column has to remain visible.';
 $GLOBALS['TL_LANG']['MSC']['columnToggle']['error'] = 'The column settings could not be saved.';
-$GLOBALS['TL_LANG']['MSC']['columnToggle']['pendingReload'] = 'Will be applied when you close the menu.';

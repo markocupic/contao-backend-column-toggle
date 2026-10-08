@@ -16,4 +16,3 @@ $GLOBALS['TL_LANG']['MSC']['columnToggle']['hideColumn'] = 'Klicken, um diese Sp
 $GLOBALS['TL_LANG']['MSC']['columnToggle']['showAll'] = 'Alle Spalten einblenden';
 $GLOBALS['TL_LANG']['MSC']['columnToggle']['lastColumn'] = 'Mindestens eine Spalte muss sichtbar bleiben.';
 $GLOBALS['TL_LANG']['MSC']['columnToggle']['error'] = 'Die Spalteneinstellungen konnten nicht gespeichert werden.';
-$GLOBALS['TL_LANG']['MSC']['columnToggle']['pendingReload'] = 'Wird beim Schliessen des Menüs übernommen.';
