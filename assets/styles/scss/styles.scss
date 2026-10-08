@@ -91,10 +91,14 @@ table.tl_listing thead th.cbct-column-toggle__header:focus-visible .cbct-column-
     flex: 0 0 auto;
     width: 16px;
     height: 16px;
+    /* Green like the other icons of the global operations */
+    color: var(--green, #589b0e);
 }
 
 .cbct-column-toggle__trigger:hover,
-.cbct-column-toggle__trigger[aria-expanded="true"] {
+.cbct-column-toggle__trigger[aria-expanded="true"],
+.cbct-column-toggle__trigger:hover svg,
+.cbct-column-toggle__trigger[aria-expanded="true"] svg {
     color: var(--contao, #f47c00);
 }
 
