@@ -14,6 +14,8 @@ Listenansicht mit geöffnetem Spalten-Menü. Die abgewählten Spalten werden per
 
 ## Voraussetzung
 
+Contao 5.3 oder höher, inklusive Contao 6.
+
 Die Listenansicht muss den Spaltenmodus verwenden:
 
 ```php
